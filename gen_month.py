@@ -21,6 +21,7 @@ from pypdf import PdfWriter
 # ── paths relative to this script ────────────────────────────────────────────
 SCRIPT_DIR   = Path(__file__).parent
 DOIT_SH      = SCRIPT_DIR / "doit.sh"
+GEN_COVER_PY = SCRIPT_DIR / "gen_cover.py"
 PAGES_DIR    = SCRIPT_DIR / "pages"
 OUTPUT_DIR   = SCRIPT_DIR / "output"
 
@@ -90,13 +91,24 @@ while cursor <= range_end:
     page_files.append(out_file)
     cursor += timedelta(days=1)
 
-# ── merge into cumulative PDF ─────────────────────────────────────────────────
+# ── generate cover page ──────────────────────────────────────────────────────
+cover_file = PAGES_DIR / f"{year}-{month:02d}-cover.pdf"
+print(f"\n  Generating cover → {cover_file.name}")
+result = subprocess.run(
+    [sys.executable, str(GEN_COVER_PY), str(year), str(month), str(cover_file)],
+    capture_output=True, text=True
+)
+if result.returncode != 0:
+    sys.exit(f"Error generating cover:\n{result.stderr}")
+
+# ── merge: cover first, then day pages ───────────────────────────────────────
 merged_path = OUTPUT_DIR / f"{year}-{month:02d}-{month_name}.pdf"
 writer = PdfWriter()
+writer.append(str(cover_file))
 for pf in page_files:
     writer.append(str(pf))
 
 with open(merged_path, "wb") as f:
     writer.write(f)
 
-print(f"\n✓ {len(page_files)} pages merged → {merged_path}")
+print(f"\n✓ cover + {len(page_files)} pages merged → {merged_path}")
