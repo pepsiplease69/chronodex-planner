@@ -1,0 +1,15 @@
+# generated output — never commit PDFs
+pages/
+output/
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# editors
+.vscode/
+.idea/
+*.swp
