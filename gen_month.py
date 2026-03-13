@@ -48,15 +48,38 @@ month_name  = calendar.month_name[month]   # e.g. "March"
 month_abbr  = MONTH_ABBRS[month]           # e.g. "Mar"
 num_days    = calendar.monthrange(year, month)[1]
 
-# ── generate one page per day ─────────────────────────────────────────────────
-page_files = []
-for day in range(1, num_days + 1):
-    weekday   = calendar.weekday(year, month, day)   # 0=Mon … 6=Sun
-    day_str   = DAY_NAMES[weekday]
-    date_str  = f"{month_abbr} {day}"
-    out_file  = PAGES_DIR / f"{year}-{month:02d}-{day:02d}.pdf"
+# ── date range: Mon of opening week → Thu of closing week ───────────────────
+from datetime import date, timedelta
 
-    print(f"  Generating {date_str} ({day_str}) → {out_file.name}")
+WORK_DAYS = {"Monday", "Tuesday", "Wednesday", "Thursday"}  # 0=Mon … 3=Thu
+
+first_day = date(year, month, 1)
+last_day  = date(year, month, num_days)
+
+# Walk back to Monday of the first week, forward to Thursday of the last week
+range_start = first_day - timedelta(days=first_day.weekday())          # Mon
+range_end   = last_day  + timedelta(days=(3 - last_day.weekday()) % 7) # Thu
+# If last_day is already Thu or later in the week, don't overshoot
+if last_day.weekday() >= 3:   # Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+    range_end = last_day + timedelta(days=max(0, 3 - last_day.weekday()))
+
+# ── generate one page per qualifying day ─────────────────────────────────────
+page_files = []
+cursor = range_start
+while cursor <= range_end:
+    day_str  = DAY_NAMES[cursor.weekday()]
+
+    if day_str not in WORK_DAYS:
+        cursor += timedelta(days=1)
+        continue
+
+    # Label uses the actual date's month abbreviation (may differ from target month)
+    day_abbr = MONTH_ABBRS[cursor.month]
+    date_str = f"{day_abbr} {cursor.day}"
+    out_file = PAGES_DIR / f"{cursor.year}-{cursor.month:02d}-{cursor.day:02d}.pdf"
+
+    marker = "" if cursor.month == month else " ◂ overflow"
+    print(f"  Generating {date_str} ({day_str}) → {out_file.name}{marker}")
     result = subprocess.run(
         ["fish", str(DOIT_SH), str(out_file), date_str, day_str],
         capture_output=True, text=True
@@ -65,6 +88,7 @@ for day in range(1, num_days + 1):
         sys.exit(f"Error generating page for {date_str}:\n{result.stderr}")
 
     page_files.append(out_file)
+    cursor += timedelta(days=1)
 
 # ── merge into cumulative PDF ─────────────────────────────────────────────────
 merged_path = OUTPUT_DIR / f"{year}-{month:02d}-{month_name}.pdf"
@@ -75,4 +99,4 @@ for pf in page_files:
 with open(merged_path, "wb") as f:
     writer.write(f)
 
-print(f"\n✓ {num_days} pages merged → {merged_path}")
+print(f"\n✓ {len(page_files)} pages merged → {merged_path}")
