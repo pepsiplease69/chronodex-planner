@@ -79,6 +79,12 @@ while x <= page_width - margin:
         y += dot_spacing
     x += dot_spacing
 
+# ── rotate entire dial 180° around page centre ───────────────────────────────
+c.saveState()
+c.translate(cx, cy)
+c.rotate(180)
+c.translate(-cx, -cy)
+
 # fill the annular ring white first
 c.setFillColorRGB(1, 1, 1)
 c.setStrokeColorRGB(1, 1, 1)
@@ -148,6 +154,8 @@ c.setFont(FONT, r_inner * 0.22)
 c.drawCentredString(0, r_inner * 0.12, month_name)
 c.setFont(FONT, r_inner * 0.18)
 c.drawCentredString(0, -r_inner * 0.18, str(year))
+c.restoreState()
+
 c.restoreState()
 
 c.save()
