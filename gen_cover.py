@@ -68,8 +68,8 @@ def seg_start_angle(i):
 c = canvas.Canvas(args.output, pagesize=(page_width, page_height))
 
 # dot grid background
-dot_spacing = 10 * mm   # 5mm after 2-up print
-margin      = 12 * mm   # 6mm after 2-up print
+dot_spacing = 7.69 * mm   # corrected → 5mm printed
+margin      = 9.23 * mm   # corrected → 6mm printed
 x = margin
 while x <= page_width - margin:
     y = margin

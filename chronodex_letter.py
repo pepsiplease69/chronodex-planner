@@ -195,7 +195,7 @@ def draw_dial(c, cx, cy, date_str, day_str):
         c.drawCentredString(lx, ly, lbl)
 
 def draw_dot_grid(c, x0, y0, x1, y1):
-    dot_spacing = 5 * mm
+    dot_spacing = 7.81 * mm   # corrected → 5mm printed
     margin = 8 * mm
     x = x0 + margin
     while x <= x1 - margin:
