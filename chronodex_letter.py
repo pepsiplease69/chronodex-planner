@@ -202,7 +202,7 @@ def draw_dot_grid(c, x0, y0, x1, y1):
         y = y0 + margin
         while y <= y1 - margin:
             c.setFillColorRGB(0.38, 0.38, 0.42)
-            c.circle(x, y, 0.55, fill=1, stroke=0)
+            c.circle(x, y, 1.1, fill=1, stroke=0)
             y += dot_spacing
         x += dot_spacing
 
