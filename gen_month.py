@@ -82,7 +82,7 @@ while cursor <= range_end:
     marker = "" if cursor.month == month else " ◂ overflow"
     print(f"  Generating {date_str} ({day_str}) → {out_file.name}{marker}")
     result = subprocess.run(
-        ["fish", str(DOIT_SH), str(out_file), date_str, day_str],
+        ["C:\\Users\\szal\\OneDrive - Chevron\\Desktop\\.venv\\Scripts\\python", "chronodex_letter.py", str(out_file), date_str, day_str],
         capture_output=True, text=True
     )
     if result.returncode != 0:
