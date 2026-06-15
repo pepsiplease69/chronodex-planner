@@ -6,12 +6,9 @@
 #   make clean                                         → remove per-day pages/
 #   make cleanall                                      → remove pages/ and output/
 #
-# Activate the venv before running make:
-#   source ../.venv/bin/activate.fish && make month YEAR=2026 MONTH=3
-#
-YEAR  ?= $(shell date +%Y)
-MONTH ?= $(shell date +%-m)
-PYTHON ?= python3
+YEAR   ?= $(shell date +%Y)
+MONTH  ?= $(shell date +%-m)
+PYTHON ?= ../.venv/bin/python3
 
 # ── targets ───────────────────────────────────────────────────────────────────
 
