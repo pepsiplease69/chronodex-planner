@@ -86,8 +86,8 @@ def draw_dial(c, cx, cy, date_str, day_str):
         inner_tick_top = inner_tick_bot + tick_height
         draw_tick(c, cx, cy, inner_tick_bot, inner_tick_top, a_start - 15)
 
-    c.setStrokeColorRGB(0.72, 0.72, 0.75)
-    c.setLineWidth(0.35)
+    c.setStrokeColorRGB(0, 0, 0)
+    c.setLineWidth(0.9)
     c.setDash([2, 8])
     c.circle(cx, cy, r_large, fill=0, stroke=1)
     c.circle(cx, cy, r_med,   fill=0, stroke=1)
