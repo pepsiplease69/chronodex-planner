@@ -25,7 +25,12 @@ _font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'EuroStyle
 pdfmetrics.registerFont(TTFont('EuroStyleNormal', _font_path))
 FONT = 'EuroStyleNormal'
 
-DIAMETERS = [12.99, 11.69, 10.39, 9.09, 7.79, 6.49]
+# old
+#DIAMETERS = [12.99, 11.69, 10.39, 9.09, 7.79, 6.49]   # cm  (all rings 8mm printed, 80mm outer)
+
+# new sizes to match the hub size on the dailies pages
+DIAMETERS = [9.83, 8.53, 7.23, 5.93, 4.63, 3.33]   # cm  (innermost matches daily r_hub)
+
 RADII     = [(d / 2) * 10 * mm for d in DIAMETERS]
 
 DAY_LETTERS = ["M", "T", "W", "R", "F", "S", "U"]
@@ -125,10 +130,20 @@ def generate_cover(year, month, output_path):
     c.saveState()
     c.translate(cx, cy)
     c.rotate(180)
-    c.setFont(FONT, r_inner * 0.22)
-    c.drawCentredString(0, r_inner * 0.12, month_name)
-    c.setFont(FONT, r_inner * 0.18)
-    c.drawCentredString(0, -r_inner * 0.18, str(year))
+
+    # old
+    #c.setFont(FONT, r_inner * 0.22)
+    #c.drawCentredString(0, r_inner * 0.12, month_name)
+    #c.setFont(FONT, r_inner * 0.18)
+    #c.drawCentredString(0, -r_inner * 0.18, str(year))
+
+    # new.. font size matches hub labels on the dailies
+    c.setFont(FONT, r_inner * 0.35)
+    c.drawCentredString(0, r_inner * 0.05, month_name)
+    c.setFont(FONT, r_inner * 0.32)
+    c.drawCentredString(0, -r_inner * 0.40, str(year))
+
+
     c.restoreState()
 
     c.restoreState()
