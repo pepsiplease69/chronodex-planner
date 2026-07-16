@@ -9,16 +9,30 @@ pdfmetrics.registerFont(TTFont('EuroStyleNormal', _font_path))
 FONT_REGULAR = 'EuroStyleNormal'
 FONT_BOLD    = 'EuroStyleNormal'
 
+#mm = 2.8346
+## US Letter Landscape: 279.4 × 215.9 mm
+#page_width  = 279.4 * mm
+#page_height = 215.9 * mm
+
 mm = 2.8346
-# US Letter Landscape: 279.4 × 215.9 mm
-page_width  = 279.4 * mm
-page_height = 215.9 * mm
+# Half-Letter LANDSCAPE for top-fold (flip-up) booklet: 8.5" × 5.5"
+page_width  = 215.9 * mm     # 8.5"  (was 139.7)
+page_height = 139.7 * mm     # 5.5"  (was 215.9)
+
+
+# How big the design is relative to the original 11"-wide sheet. = 0.5
+SCALE = page_width / (279.4 * mm)
+
+
 
 cx_dial = page_width  / 2
 cy_dial = page_height / 2
 
 _r_large_orig = 28 * mm
-r_large = page_width / 6
+
+#r_large = page_width / 6
+r_large = 30 * mm          # was page_width / 6  →  ⌀ 60 mm 
+
 _scale  = r_large / _r_large_orig
 
 r_med   = r_large * (22   / 28)
@@ -169,14 +183,17 @@ def draw_dial(c, cx, cy, date_str, day_str):
 
 
 def draw_dot_grid(c, x0, y0, x1, y1):
-    dot_spacing = 7.81 * mm
-    margin = 8 * mm
+    #dot_spacing = 7.81 * mm
+    #margin = 8 * mm
+    dot_spacing = 5 * mm       # was 7.81 * mm * SCALE 
+    margin      = 8 * mm * SCALE
     x = x0 + margin
     while x <= x1 - margin:
         y = y0 + margin
         while y <= y1 - margin:
             c.setFillColorRGB(0.38, 0.38, 0.42)
-            c.circle(x, y, 1.1, fill=1, stroke=0)
+            #c.circle(x, y, 1.1, fill=1, stroke=0)
+            c.circle(x, y, 1.1 * SCALE, fill=1, stroke=0)
             y += dot_spacing
         x += dot_spacing
 
