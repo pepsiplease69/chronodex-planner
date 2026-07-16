@@ -17,21 +17,36 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-mm          = 2.8346
-page_width  = 279.4 * mm
-page_height = 215.9 * mm
+#mm          = 2.8346
+#page_width  = 279.4 * mm
+#page_height = 215.9 * mm
+
+mm = 2.8346
+page_width  = 215.9 * mm     # 8.5"
+page_height = 139.7 * mm     # 5.5"
+
+
+# How big the design is relative to the original 11"-wide sheet. = 0.5
+SCALE = page_width / (279.4 * mm)
+
+
 
 _font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'EuroStyle_Normal.ttf')
 pdfmetrics.registerFont(TTFont('EuroStyleNormal', _font_path))
 FONT = 'EuroStyleNormal'
 
-# old
+# old 00
 #DIAMETERS = [12.99, 11.69, 10.39, 9.09, 7.79, 6.49]   # cm  (all rings 8mm printed, 80mm outer)
+#RADII     = [(d / 2) * 10 * mm for d in DIAMETERS]
 
+# old 01
 # new sizes to match the hub size on the dailies pages
-DIAMETERS = [9.83, 8.53, 7.23, 5.93, 4.63, 3.33]   # cm  (innermost matches daily r_hub)
+#DIAMETERS = [9.83, 8.53, 7.23, 5.93, 4.63, 3.33]   # cm  (innermost matches daily r_hub)
+#RADII = [(d / 2) * 10 * mm * SCALE for d in DIAMETERS]
 
-RADII     = [(d / 2) * 10 * mm for d in DIAMETERS]
+# Print diameters in mm (1:1 print). Outer → inner. Innermost = 20mm.
+DIAMETERS_MM = [58.4, 50.7, 43.0, 35.4, 27.7, 20.0]
+RADII = [(d / 2) * mm for d in DIAMETERS_MM]
 
 DAY_LETTERS = ["M", "T", "W", "R", "F", "S", "U"]
 
@@ -59,7 +74,8 @@ def generate_cover(year, month, output_path):
 
     c = canvas.Canvas(str(output_path), pagesize=(page_width, page_height))
 
-    dot_spacing = 7.69 * mm
+    #dot_spacing = 7.69 * mm
+    dot_spacing = 5 * mm
     margin      = 9.23 * mm
     x = margin
     while x <= page_width - margin:
@@ -100,7 +116,7 @@ def generate_cover(year, month, output_path):
         c.line(x0, y0, x1, y1)
 
     r_label = (RADII[0] + RADII[1]) / 2
-    label_font_size = 11.0
+    label_font_size = 6.0
     c.setFont(FONT, label_font_size)
     c.setFillColorRGB(0.12, 0.12, 0.15)
     for i in range(num_days):
