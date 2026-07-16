@@ -1,6 +1,7 @@
 # generated output — never commit PDFs
 pages/
 output/
+downloads/
 *.pdf
 
 # Python
